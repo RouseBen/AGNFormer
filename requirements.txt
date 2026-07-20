@@ -6,3 +6,4 @@ matplotlib
 astropy
 h5py
 scipy
+git+https://github.com/fabian-sp/lr-scheduling.git
