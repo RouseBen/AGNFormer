@@ -3,7 +3,7 @@
 Code accompanying **Rouse et al. 2026** (in prep) — *AGNFormer*, reconstruction of active galactic nuclei spectra using a probabilistic transformer model.
 
 ## Overview
-
+ß
 AGNFormer (`base.py`) is a transformer encoder trained to reconstruct masked or corrupted regions of an input spectrum (flux + error vs. wavelength), predicting both a mean flux (`mu`) and an uncertainty (`log_var`) at each pixel via a Gaussian negative log-likelihood loss. Wavelength is encoded with a continuous sinusoidal positional encoding (`WavelengthPositionalEncodingVaswaniEquivalent`), and learnable register tokens are prepended to the sequence to accumulate global spectral information.
 
 Several masking strategies are provided in `specmanip.py` to corrupt spectra during training/evaluation:
@@ -44,9 +44,9 @@ See `requirements.txt` for a pinned-free install list (`pip install -r requireme
 
 ## Model weights
 
-Pre-trained weights from Rouse et al. 2026 are hosted on Zenodo: **[link to be added]**.
+Pre-trained weights from Rouse et al. 2026 are hosted on Zenodo: (https://zenodo.org/uploads/21448655).
 
-Download `transformer_weights.pt` and place it in the repository root (or point to its path) before running `example.py`.
+Download `weights.pt` and place it in the repository root (or point to its path) before running `example.py`.
 
 ## Usage
 
@@ -58,7 +58,7 @@ In `example.py`, set:
 
 ```python
 pretrain = False
-weights = "transformer_weights.pt"   # path to the file downloaded from Zenodo
+weights = "weights.pt"   # path to the file downloaded from Zenodo
 ```
 
 The `config` dict (`d_model`, `n_heads`, `n_layers`, `d_ff`, `n_registers`) must match the architecture the released weights were trained with — don't change these unless you're training your own model from scratch (Option B).
