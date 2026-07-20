@@ -23,6 +23,7 @@ Several masking strategies are provided in `specmanip.py` to corrupt spectra dur
 | `synthetic_spec.py` | Generates synthetic AGN-like spectra (continuum + emission lines + noise) for testing the pipeline without real data. |
 | `line_centres.py` | Table of rest-frame broad emission-line centres (from the SDSS line list) used by `FixedMask`. |
 | `predict_spectrum.py` | Minimal example: load a trained model and run it on a single spectrum to get a reconstruction. |
+| `plot_attention.py` | Example: extract attention matrices (`probs=True`) from a trained model and plot them. |
 
 ## Requirements
 
@@ -104,6 +105,31 @@ python predict_spectrum.py
 ```
 
 It covers the steps needed to use your own data at inference time: normalising the spectrum the same way as during training, adding the batch dimension, building the model with the checkpoint's config, loading `weights.pt`, and calling `model.eval()` before running inference (skipping `.eval()` is a common mistake — the model injects training-time noise unless it's in eval mode). Swap out the placeholder synthetic spectrum near the top of the script for your own flux/wavelength/error arrays.
+
+### Visualising attention
+
+Passing `probs=True` when constructing `Transformer` makes `forward()` return an extra `all_attn_probs` value: a list with one attention-weight tensor per encoder layer, each of shape `(batch, heads, seq_len [+ n_registers], seq_len [+ n_registers])`. This lets you inspect which wavelength regions the model attends to when reconstructing a spectrum.
+
+```python
+model = Transformer(..., probs=True)
+...
+mu, log_var, all_attn_probs = model(src, errors, wavelength, varian=True)
+attn = all_attn_probs[-1][0, 0]  # last layer, batch item 0, head 0 -> (seq_len [+ n_registers], seq_len [+ n_registers])
+```
+
+Note that if `n_registers > 0`, the attention matrix includes extra rows/columns for the register tokens (appended after the spectral pixels), which attend to and are attended to by every pixel.
+
+`plot_attention.py` is a runnable example that builds a model with `probs=True`, loads `weights.pt`, and saves a heatmap of one layer/head's attention matrix to `assets/attention_example.png`:
+
+```bash
+python plot_attention.py
+```
+
+Example output:
+
+![Example attention matrix](assets/attention_example.png)
+
+*(placeholder — replace `assets/attention_example.png` with a real figure from a trained model)*
 
 ## Citation
 
