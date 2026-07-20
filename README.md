@@ -118,17 +118,19 @@ attn = all_attn_probs[-1][0, 0]  # last layer, batch item 0, head 0 -> (seq_len 
 
 Note that if `n_registers > 0`, the attention matrix includes extra rows/columns for the register tokens (appended after the spectral pixels), which attend to and are attended to by every pixel.
 
-`plot_attention.py` is a runnable example that builds a model with `probs=True`, loads `weights.pt`, and saves a heatmap of one layer/head's attention matrix to `assets/attention_example.png`:
+`plot_attention.py` is a runnable example that builds a model with `probs=True`, loads `weights.pt`, and plots every layer/head's attention matrix in a grid (`plot_all_attention`), with wavelength ticks on both axes:
 
 ```bash
 python plot_attention.py
 ```
 
+This saves the figure to `assets/attn_plot_<count>.png` (`count` is just a label for the filename, e.g. a spectrum index — pass a different value to avoid overwriting when plotting multiple spectra).
+
 Example output:
 
-![Example attention matrix](assets/attention_example.png)
+![Example attention matrix](assets/attn_plot_0.png)
 
-*(placeholder — replace `assets/attention_example.png` with a real figure from a trained model)*
+*(placeholder — replace `assets/attn_plot_0.png` with a real figure from a trained model)*
 
 ## Citation
 
