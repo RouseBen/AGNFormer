@@ -3,7 +3,6 @@
 Code accompanying **Rouse et al. 2026** (in prep) — *AGNFormer*, reconstruction of active galactic nuclei spectra using a probabilistic transformer model.
 
 ## Overview
-ß
 AGNFormer (`base.py`) is a transformer encoder trained to reconstruct masked or corrupted regions of an input spectrum (flux + error vs. wavelength), predicting both a mean flux (`mu`) and an uncertainty (`log_var`) at each pixel via a Gaussian negative log-likelihood loss. Wavelength is encoded with a continuous sinusoidal positional encoding (`WavelengthPositionalEncodingVaswaniEquivalent`), and learnable register tokens are prepended to the sequence to accumulate global spectral information.
 
 Several masking strategies are provided in `specmanip.py` to corrupt spectra during training/evaluation:
@@ -23,6 +22,7 @@ Several masking strategies are provided in `specmanip.py` to corrupt spectra dur
 | `specmanip.py` | Spectrum masking and normalisation utilities used during training. |
 | `synthetic_spec.py` | Generates synthetic AGN-like spectra (continuum + emission lines + noise) for testing the pipeline without real data. |
 | `line_centres.py` | Table of rest-frame broad emission-line centres (from the SDSS line list) used by `FixedMask`. |
+| `predict_spectrum.py` | Minimal example: load a trained model and run it on a single spectrum to get a reconstruction. |
 
 ## Requirements
 
@@ -44,9 +44,15 @@ See `requirements.txt` for a pinned-free install list (`pip install -r requireme
 
 ## Model weights
 
-Pre-trained weights from Rouse et al. 2026 are hosted on Zenodo: (https://zenodo.org/uploads/21448655).
+Pre-trained weights from Rouse et al. 2026 are hosted on Zenodo (record to be published — link will be updated here once live).
 
-Download `weights.pt` and place it in the repository root (or point to its path) before running `example.py`.
+Once published, download `weights.pt` into the repository root with:
+
+```bash
+curl -L -o weights.pt "https://zenodo.org/records/<RECORD_ID>/files/weights.pt?download=1"
+```
+
+(replace `<RECORD_ID>` with the final Zenodo record number — the placeholder draft is [21448655](https://zenodo.org/uploads/21448655), but that link only works while logged into the account that owns it, so the final DOI/record ID will differ once published).
 
 ## Usage
 
@@ -88,6 +94,16 @@ By default `example.py` calls `generate_synthetic_spectra()` to create toy spect
 - `err` — 1-sigma flux uncertainty per pixel (`0.0` wherever `X` is padded)
 
 Every spectrum should share the same `npix` (pad/truncate/interpolate onto a common grid beforehand). See `synthetic_spec.py` for a worked example of the expected array layout.
+
+### Predicting on a single spectrum
+
+`predict_spectrum.py` is a minimal, runnable example showing how to feed one spectrum through a trained model and get a reconstruction back:
+
+```bash
+python predict_spectrum.py
+```
+
+It covers the steps needed to use your own data at inference time: normalising the spectrum the same way as during training, adding the batch dimension, building the model with the checkpoint's config, loading `weights.pt`, and calling `model.eval()` before running inference (skipping `.eval()` is a common mistake — the model injects training-time noise unless it's in eval mode). Swap out the placeholder synthetic spectrum near the top of the script for your own flux/wavelength/error arrays.
 
 ## Citation
 
