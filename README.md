@@ -53,7 +53,6 @@ Once published, download `weights.pt` into the repository root with:
 curl -L -o weights.pt "https://zenodo.org/records/<RECORD_ID>/files/weights.pt?download=1"
 ```
 
-(replace `<RECORD_ID>` with the final Zenodo record number — the placeholder draft is [21448655](https://zenodo.org/uploads/21448655), but that link only works while logged into the account that owns it, so the final DOI/record ID will differ once published).
 
 ## Usage
 
