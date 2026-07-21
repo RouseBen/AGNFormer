@@ -128,9 +128,7 @@ This saves the figure to `assets/attn_plot_<count>.png` (`count` is just a label
 
 Example output:
 
-![Example attention matrix](assets/attn_plot_0.png)
-
-*(placeholder — replace `assets/attn_plot_0.png` with a real figure from a trained model)*
+![Example attention matrix](assets/attn_plot.png)
 
 ## Citation
 
